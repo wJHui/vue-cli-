@@ -2,22 +2,33 @@
 const utils = require('./utils')
 const webpack = require('webpack')
 const config = require('../config')
-const merge = require('webpack-merge')
+
+/* 一个可以合并数组和对象的插件 */
+const merge = require('webpack-merge')   
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
+
+/* 用于将static中的静态文件复制到产品文件夹dist */
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+
+/* 用于将webpack编译打包后的产品文件注入到html模板中,即自动在index.html中里面机上和标签引用webpack打包后的文件 */
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+/* 用于更友好的输出webpack的警告,错误信息等 */
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const portfinder = require('portfinder')
+
+/* 获取当前可用的port. (vue-cli配置好了，一旦端口被占用，报错，再次运行时会打开：8080+1,依次类推...8080+n)*/
+const portfinder = require('portfinder')  
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
+
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
-  // cheap-module-eval-source-map is faster for development
+  // cheap-module-eval-source-map is faster for development  对于开发来说，便宜的模块外源映射更快
   devtool: config.dev.devtool,
 
   // these devServer options should be customized in /config/index.js
@@ -51,7 +62,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     new webpack.NoEmitOnErrorsPlugin(),
-    // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: 'index.html',
